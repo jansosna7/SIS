@@ -6,9 +6,10 @@ Zadanie - zaplanuj sieć o minimalnym rozmiarze łączącą punkty brzegowe (ONU
 1. Losowo z szumem
 2. Losowo naiwnie
 3. K-means
-
+4. K-rand
 
 Zmiany argumentów na początku plików:
 FIG_SIZE = 25/50/250
 num = "_1"/"_2"/"_3"
 w zależności od zestawu danych
+

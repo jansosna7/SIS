@@ -8,8 +8,8 @@ from scipy.spatial import distance_matrix
 import matplotlib.pyplot as plt
 import os
 
-FIG_SIZE = 250
-num = "_3"
+FIG_SIZE = 25
+num = "_1"
 
 def calculate_distance(point1, point2):
     return np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
@@ -94,7 +94,7 @@ def add_noise(splitters_positions, distance):
 
     return new_positions
 
-def optimize_splitters_with_reassignment(OLT, onups, num_splitters, max_iter, max_stagnation):
+def optimize_splitters_with_random_noise(OLT, onups, num_splitters, max_iter, max_stagnation):
     ONU_positions = onups.copy()
     splitters_positions = random_initial_positions(num_splitters)
     
@@ -194,16 +194,16 @@ def main():
     max_stagnation = 60
     
     for num_splitters in range(1, 2+int(len(ONU_positions)**0.5)):
-        splitters,onus,dist,mst = optimize_splitters_with_reassignment(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
+        splitters,onus,dist,mst = optimize_splitters_with_random_noise(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
     
         best_dist = dist
         for i in range(3):
-            c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_reassignment(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
+            c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_random_noise(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
             print(dist)
             if(c_dist < best_dist):
                 splitters,onus,dist,mst = c_splitters,c_onus,c_dist,c_mst
                 
-        file_path = os.path.join("random_img", str(num_splitters) + "_random_fiber_network" + num + ".png")
+        file_path = os.path.join("random_noise_img", str(num_splitters) + "_random_noise_fiber_network" + num + ".png")
         plot_network(OLT, splitters, mst, onus, file_path, int(dist))
 
 if __name__=="__main__":

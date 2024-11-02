@@ -12,8 +12,9 @@ import os
 
 def add_noise(splitters_positions, distance):
     new_positions = []
-    
-    for (x, y) in splitters_positions:
+    new_positions.append(splitters_positions[0])
+
+    for (x, y) in splitters_positions[1:]:
         # Generate a random number between 0 and 1
         rand_num = random.random()
         
@@ -34,21 +35,18 @@ def add_noise(splitters_positions, distance):
 
     return new_positions
 
-def optimize_splitters_with_random_noise(OLT, onups, num_splitters, max_iter, max_stagnation):
+def optimize_splitters_with_random_noise(onups, splitters_positions, max_iter, max_stagnation):
     ONU_positions = onups.copy()
-    splitters_positions = random_initial_positions(num_splitters)
     
     ONU_positions = assign_ONU_to_splitters(splitters_positions, ONU_positions)
     
-    total_length, mst = calculate_total_length(OLT, splitters_positions, ONU_positions)
+    total_length, mst = calculate_total_length(splitters_positions, ONU_positions)
 
     stagnation = 0
 
     distance = 16
     for iteration in range(max_iter):
         #print(total_length)
-
-        
         best_move = None
         best_length = total_length
         best_mst = mst
@@ -59,7 +57,7 @@ def optimize_splitters_with_random_noise(OLT, onups, num_splitters, max_iter, ma
 
         new_ONU_positions = assign_ONU_to_splitters(new_splitters_positions, ONU_positions)
 
-        new_length, new_mst = calculate_total_length(OLT, new_splitters_positions, ONU_positions)
+        new_length, new_mst = calculate_total_length(new_splitters_positions, ONU_positions)
                
         if new_length < best_length:
             best_length = new_length
@@ -90,22 +88,22 @@ def main():
     file_path = "onu_points" + num + ".xlsx"
     ONU_positions =  pd.read_excel(file_path)
     ONU_positions['splitter_id'] = -1
-    #num_splitters = 10
     max_iter = 5000
     max_stagnation = 60
     
     for num_splitters in range(1, 2+int(len(ONU_positions)**0.5)):
-        splitters,onus,dist,mst = optimize_splitters_with_random_noise(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
+        splitters_positions = [OLT] + random_initial_positions(num_splitters)
+        splitters,onus,dist,mst = optimize_splitters_with_random_noise(ONU_positions, splitters_positions, max_iter, max_stagnation)
     
         best_dist = dist
         for i in range(3):
-            c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_random_noise(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
+            c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_random_noise(ONU_positions, splitters_positions, max_iter, max_stagnation)
             print(dist)
             if(c_dist < best_dist):
                 splitters,onus,dist,mst = c_splitters,c_onus,c_dist,c_mst
                 
         file_path = os.path.join("random_noise_img", str(num_splitters) + "_random_noise_fiber_network" + num + ".png")
-        plot_network(OLT, splitters, mst, onus, file_path, int(dist))
+        plot_network(splitters, mst, onus, file_path, int(dist))
 
 if __name__=="__main__":
     main()

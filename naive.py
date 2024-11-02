@@ -21,28 +21,23 @@ def move_splitter(splitter, direction, distance):
         x += distance
     return (x, y)
 
-def swap(splitters_positions, chosen_splitter, new_position):
+def swap(splitters_positions, chosen_splitter_index, new_position):
     new_splitters_positions = list(splitters_positions)
-    chosen_index = new_splitters_positions.index(chosen_splitter)
-    new_splitters_positions[chosen_index] = new_position
+    new_splitters_positions[chosen_splitter_index] = new_position
     
     return new_splitters_positions
 
-def optimize_splitters_with_reassignment(OLT, onups, num_splitters, max_iter, max_stagnation):
-    ONU_positions = onups.copy()
-    splitters_positions = random_initial_positions(num_splitters)
-    
+def optimize_splitters_with_reassignment(onups, splitters_positions, max_iter, max_stagnation):
+    ONU_positions = onups.copy()  
     ONU_positions = assign_ONU_to_splitters(splitters_positions, ONU_positions)
-    
-    total_length, mst = calculate_total_length(OLT, splitters_positions, ONU_positions)
+    total_length, mst = calculate_total_length(splitters_positions, ONU_positions)
+
+    if(len(splitters_positions) == 1):
+        return splitters_positions, ONU_positions, total_length, mst
 
     stagnation = 0
-
-    
     for iteration in range(max_iter):
-        #print(total_length)
-        chosen_splitter = random.choice(splitters_positions)
-        
+        chosen_splitter_index = random.randint(1,len(splitters_positions)-1) #dont move OLT
         best_move = None
         best_length = total_length
         best_mst = mst
@@ -51,26 +46,23 @@ def optimize_splitters_with_reassignment(OLT, onups, num_splitters, max_iter, ma
         
         for distance in [1,4,16]:
             for direction in ['up', 'down', 'left', 'right']:
-                new_position = move_splitter(chosen_splitter, direction, distance)
-                new_splitters_positions = swap(splitters_positions, chosen_splitter, new_position)            
-
+                new_position = move_splitter(splitters_positions[chosen_splitter_index], direction, distance)
+                new_splitters_positions = swap(splitters_positions, chosen_splitter_index, new_position)            
                 new_ONU_positions = assign_ONU_to_splitters(new_splitters_positions, ONU_positions)
-
-                new_length, new_mst = calculate_total_length(OLT, new_splitters_positions, ONU_positions)
-                
+                new_length, new_mst = calculate_total_length(new_splitters_positions, ONU_positions)
                 if new_length < best_length:
-                    best_length = new_length
-                    best_mst = new_mst
+                    best_length = new_length.copy()
+                    best_mst = new_mst.copy()
                     best_move = True
-                    best_ONU_positions = new_ONU_positions
-                    best_splitters_positions = new_splitters_positions
+                    best_ONU_positions = new_ONU_positions.copy()
+                    best_splitters_positions = new_splitters_positions.copy()
 
         if best_move:
             stagnation = 0            
-            total_length = best_length
-            mst = best_mst
-            ONU_positions = best_ONU_positions
-            splitters_positions = best_splitters_positions
+            total_length = best_length.copy()
+            mst = best_mst.copy()
+            ONU_positions = best_ONU_positions.copy()
+            splitters_positions = best_splitters_positions.copy()
         else:
             stagnation = stagnation + 1
 
@@ -88,18 +80,14 @@ def main():
     max_iter = 3000
     max_stagnation = 33
     
-    for num_splitters in range(1, 2+int(len(ONU_positions)**0.5)):
-        splitters,onus,dist,mst = optimize_splitters_with_reassignment(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
+    for num_splitters in range(1, 1+int(len(ONU_positions)**0.5)):
+        splitters_positions = [OLT] + random_initial_positions(num_splitters)  
+        splitters,onus,dist,mst = optimize_splitters_with_reassignment(ONU_positions, splitters_positions, max_iter, max_stagnation)
     
-        '''best_dist = dist
-        for i in range(4):
-            c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_reassignment(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
-            print(dist)
-            if(c_dist < best_dist):
-                splitters,onus,dist,mst = c_splitters,c_onus,c_dist,c_mst'''
         file_path = os.path.join("naive_img", str(num_splitters) + "_naive_fiber_network" + num + ".png")
-        plot_network(OLT, splitters, mst, onus, file_path, int(dist))
+        plot_network(splitters, mst, onus, file_path, int(dist))
         print(dist)
-
+        #check_assigment(onus,splitters)
+        
 if __name__=="__main__":
     main()

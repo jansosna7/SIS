@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import os
 
 FIG_SIZE = 25
-num = "_1"
+num = "_4"
 
 def calculate_distance(point1, point2):
     return np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)

@@ -1,6 +1,8 @@
-Zadanie: rozmieścić i połączyć k węzłów pośrednich (splitter) ze sobą oraz z punktami krańcowymi (ONU), przy wybranym punkcie centralnym (OLT), tak, żeby zminimalizować całkowitą długość połączeń
+Zadanie: rozmieścić i połączyć K węzłów pośrednich (splitter) ze sobą oraz z N punktami krańcowymi (ONU), przy wybranym punkcie centralnym (OLT), tak, żeby zminimalizować całkowitą długość połączeń
 Możliwe połączenia: ONU-splitter, splitter-splitter, splitter-OLT
 Rozwiązanie składa się z trzech faz: k_means, random_noise i naive, wykonanych jedna po drugiej.
 K_means - wyznaczenie centroidów dla zbioru ONU jako pozycji splitterów
 random_noise - iteracyjne dodawanie losowych wartości (szumu) do około połowy pozycji splitterów i zachowywanie tej konfiguracji, która jest lepsza, powtarzane wiele razy
 naive - iteracyjne próby przesunięcia losowo wybranego splittera o pewną odległość i zachowanie tej konfiguracji, która jest lepsza, powtarzane wiele razy
+
+Pozostaje kwestia wyboru ilości węzłów pośrednich, gdyż przy swobodnym wyborze tej liczby i braku innych ograniczeń, optymalny układ sieci wyglądałby tak, że w każdym punkcie ONU znajdowałby się splitter i długość sieci to byłoby MST na wszystkich punktach. Dlatego w obecnej postaci program generuje układy dla liczby splitterów od 1 do 2+sqrt(N).

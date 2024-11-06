@@ -8,8 +8,8 @@ from scipy.spatial import distance_matrix
 import matplotlib.pyplot as plt
 import os
 
-FIG_SIZE = 25
-num = "_4"
+FIG_SIZE = 250
+num = "_3"
 
 def calculate_distance(point1, point2):
     return np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)

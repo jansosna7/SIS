@@ -1,0 +1,6 @@
+Zadanie: rozmieścić i połączyć k węzłów pośrednich (splitter) ze sobą oraz z punktami krańcowymi (ONU), przy wybranym punkcie centralnym (OLT), tak, żeby zminimalizować całkowitą długość połączeń
+Możliwe połączenia: ONU-splitter, splitter-splitter, splitter-OLT
+Rozwiązanie składa się z trzech faz: k_means, random_noise i naive, wykonanych jedna po drugiej.
+K_means - wyznaczenie centroidów dla zbioru ONU jako pozycji splitterów
+random_noise - iteracyjne dodawanie losowych wartości (szumu) do około połowy pozycji splitterów i zachowywanie tej konfiguracji, która jest lepsza, powtarzane wiele razy
+naive - iteracyjne próby przesunięcia losowo wybranego splittera o pewną odległość i zachowanie tej konfiguracji, która jest lepsza, powtarzane wiele razy

@@ -9,21 +9,21 @@ import os
 from sklearn.cluster import KMeans
 import random_noise
 import naive
+import k_means
 
 from fiber_lib import *
-from k-means import *
 
 
 def optimize_splitters_with_krand(OLT, ONU_positions, num_splitters, max_iter, max_stagnation):
     #k-means version
-    splitters_positions, ONU_positions, total_distance, mst = optimize_splitters_with_kmeans(OLT, ONU_positions, num_splitters)
+    splitters_positions, ONU_positions, total_distance, mst = k_means.optimize_splitters_with_kmeans(OLT, ONU_positions, num_splitters)
     splitters_positions = [OLT] + splitters_positions
-    
+
     #random noise version
-    splitters_positions, ONU_positions, total_length, mst = random_noise.optimize_splitters_with_random_noise(ONU_positions, num_splitters, max_iter, max_stagnation)
+    splitters_positions, ONU_positions, total_length, mst = random_noise.optimize_splitters_with_random_noise(ONU_positions, splitters_positions, max_iter, max_stagnation)
     
     #naive version
-    splitters_positions, ONU_positions, total_length, mst = naive.optimize_splitters_with_reassignment(ONU_positions, num_splitters, max_iter, max_stagnation)
+    splitters_positions, ONU_positions, total_length, mst = naive.optimize_splitters_with_reassignment(ONU_positions, splitters_positions, max_iter, max_stagnation)
     
     return splitters_positions, ONU_positions, total_length, mst
 
@@ -40,7 +40,7 @@ def main():
         splitters,onus,dist,mst = optimize_splitters_with_krand(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
         
         file_path = os.path.join("k-rand_img", str(num_splitters) + "_krand_fiber_network" + num + ".png")
-        plot_network(OLT, splitters, mst, onus, file_path, int(dist))
+        plot_network(splitters, mst, onus, file_path, int(dist))
         print(dist)
 
 if __name__=="__main__":

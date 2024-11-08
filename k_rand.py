@@ -36,7 +36,7 @@ def main():
     max_iter = 2000
     max_stagnation = 20
 
-    for num_splitters in range(1, 2+int(len(ONU_positions)**0.5)):
+    for num_splitters in range(1, len(ONU_positions)+1):
         splitters,onus,dist,mst = optimize_splitters_with_krand(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
         
         file_path = os.path.join("k-rand_img", str(num_splitters) + "_krand_fiber_network" + num + ".png")

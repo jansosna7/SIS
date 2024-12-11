@@ -68,10 +68,10 @@ def assign_ONU_to_splitters(splitters_positions, onus):
 def plot_network(splitters_positions, mst, ONU_positions, title, dist):
     plt.figure(figsize=(10, 8))
 
-    for idx, splitter in enumerate(splitters_positions):
-        plt.plot(splitter[0], splitter[1], 'ro', markersize=8, label='Splitter' if idx == 0 else "")  # Splitters in red
-
     plt.plot(splitters_positions[0][0], splitters_positions[0][1], 'bo', markersize=10, label='OLT')
+
+    for idx, splitter in enumerate(splitters_positions[1:]):
+        plt.plot(splitter[0], splitter[1], 'ro', markersize=8, label='Splitter' if idx == 0 else "")  # Splitters in red
 
     for i in range(mst.shape[0]):
         for j in range(mst.shape[1]):

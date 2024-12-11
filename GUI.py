@@ -4,21 +4,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-import k_rand_lib  # Assuming you have this module
+from k_rand import calculate
 
-# Initialize the DataFrame to store points
 df = pd.DataFrame(columns=['x', 'y'])
 
-# Create the main application window
 root = tk.Tk()
 root.title("XY Plane with Points")
 
-# Variable to track the mode (add or remove)
 current_mode = "add"  # 'add' or 'remove'
 plane_size = 0
-canvas = None  # We will initialize the canvas here
+canvas = None  
 
-# Function to ask for the size of the plane
 def ask_plane_size():
     size = simpledialog.askinteger("Plane Size", "Enter the size of the plane (positive integer):")
     if size is None or size <= 0:
@@ -27,13 +23,11 @@ def ask_plane_size():
     else:
         create_plane(size)
 
-# Function to create the plane based on user input
 def create_plane(size):
     global plane_size
     plane_size = size
     update_plane_plot()
 
-# Function to update the plot with points
 def update_plane_plot():
     global canvas
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -44,30 +38,24 @@ def update_plane_plot():
     ax.set_ylabel("Y")
     ax.grid(True)
 
-    # Plot all points
-    ax.scatter(df['x'], df['y'], color='red', zorder=5)
+    ax.scatter(df['x'], df['y'], color='green', zorder=5)
 
-    # If canvas exists, update it; otherwise, create a new one
     if canvas is not None:
-        canvas.get_tk_widget().destroy()  # Destroy the previous canvas
-    canvas = FigureCanvasTkAgg(fig, master=frame_plot)  # Recreate the canvas with the updated plot
+        canvas.get_tk_widget().destroy()  
+    canvas = FigureCanvasTkAgg(fig, master=frame_plot) 
     canvas.draw()
     canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
-    # Bind mouse click event to add/remove point
     canvas.mpl_connect('button_press_event', on_canvas_click)
 
-# Function to handle mouse click on the canvas
 def on_canvas_click(event):
-    global df  # Ensure we're modifying the global df variable
+    global df  
     if event.inaxes is not None:
         x = int(round(event.xdata))
         y = int(round(event.ydata))
         
-        # Ensure coordinates are within bounds
         if -plane_size <= x <= plane_size and -plane_size <= y <= plane_size:
             if current_mode == "add":
-                # Add point using pd.concat() instead of append()
                 new_point = pd.DataFrame({'x': [x], 'y': [y]})
                 df = pd.concat([df, new_point], ignore_index=True)
                 update_plane_plot()
@@ -86,7 +74,6 @@ def on_canvas_click(event):
                 else:
                     messagebox.showerror("Point Not Found", "No point found close to the clicked coordinates within the margin.")
 
-# Function to toggle between 'add' and 'remove' mode
 def toggle_mode():
     global current_mode
     if current_mode == "add":
@@ -96,33 +83,26 @@ def toggle_mode():
         current_mode = "add"
         btn_toggle.config(text="Switch to Remove Mode")
 
-# Function to ask the user for max_splitters and trigger the calculation
-def calculate():
+def call_calculate():
     max_splitters = simpledialog.askinteger("Max Splitters", "Enter the maximum number of splitters:")
     if max_splitters is None or max_splitters <= 0:
         messagebox.showerror("Invalid Input", "Please enter a valid positive integer for max_splitters.")
     else:
-        # Pass both the df and max_splitters to the calculate function
-        k_rand_lib.calculate(df, max_splitters)
+        calculate(df, max_splitters)
 
-# Add the main buttons and set up the interface
 frame_controls = tk.Frame(root)
 frame_controls.pack(side=tk.LEFT, padx=10, pady=10)
 
 frame_plot = tk.Frame(root)
 frame_plot.pack(side=tk.RIGHT, padx=10, pady=10)
 
-# Button to toggle between add/remove mode
 btn_toggle = tk.Button(frame_controls, text="Switch to Remove Mode", command=toggle_mode)
 btn_toggle.pack(fill=tk.X, pady=5)
 
-# Button to calculate/optimize
-btn_calculate = tk.Button(frame_controls, text="Calculate", command=calculate)
+btn_calculate = tk.Button(frame_controls, text="Calculate", command=call_calculate)
 btn_calculate.pack(fill=tk.X, pady=5)
 
-# Ask for the plane size on launch
 ask_plane_size()
 
-# Start the Tkinter main loop
 root.mainloop()
 

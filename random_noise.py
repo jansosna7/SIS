@@ -18,20 +18,24 @@ def add_noise(splitters_positions, distance):
         # Generate a random number between 0 and 1
         rand_num = random.random()
         
-        if rand_num < 0.5:  # 50% chance to stay
+        if rand_num < 0.2:  # 20% chance to stay
             new_positions.append((x, y))
         else:
-            # 50% chance to move in one of the 8 directions
-            direction = random.choice(['up', 'down', 'left', 'right'])
+            #move in one of the 8 directions
+            direction = random.choice(["up", "down", "left", "right", "up left", "up right", "down left", "down right"])
+
+            x2 = x
+            y2 = y
             
-            if direction == 'up':
-                new_positions.append((x, y + distance))
-            elif direction == 'down':
-                new_positions.append((x, y - distance))
-            elif direction == 'left':
-                new_positions.append((x - distance, y))
-            elif direction == 'right':
-                new_positions.append((x + distance, y))
+            if "up" in direction:
+                y2 += distance
+            elif "down" in direction:
+                y2 -= distance
+            elif "left" in direction:
+                x2 -= distance
+            elif "right" in direction:
+                x2 += distance
+            new_positions.append((x2,y2))
 
     return new_positions
 
@@ -76,7 +80,7 @@ def optimize_splitters_with_random_noise(onups, splitters_positions, max_iter, m
             stagnation = stagnation + 1
 
         if stagnation > max_stagnation:
-            distance = distance/2
+            distance = distance//2
         if distance < 1:
             break
         

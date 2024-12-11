@@ -11,13 +11,13 @@ from fiber_lib import *
 
 def move_splitter(splitter, direction, distance):  
     x, y = splitter  
-    if direction == "up":
+    if "up" in direction:
         y += distance
-    elif direction == "down":
+    elif "down" in direction:
         y -= distance
-    elif direction == "left":
+    elif "left" in direction:
         x -= distance
-    elif direction == "right":
+    elif "right" in direction:
         x += distance
     return (x, y)
 
@@ -44,8 +44,8 @@ def optimize_splitters_with_reassignment(onups, splitters_positions, max_iter, m
         best_ONU_positions = ONU_positions
         best_splitters_positions = splitters_positions
         
-        for distance in [1,4,16]:
-            for direction in ['up', 'down', 'left', 'right']:
+        for distance in [1,3,9,18]:
+            for direction in ["up", "down", "left", "right", "up left", "up right", "down left", "down right"]:
                 new_position = move_splitter(splitters_positions[chosen_splitter_index], direction, distance)
                 new_splitters_positions = swap(splitters_positions, chosen_splitter_index, new_position)            
                 new_ONU_positions = assign_ONU_to_splitters(new_splitters_positions, ONU_positions)

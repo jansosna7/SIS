@@ -23,7 +23,7 @@ def calculate_total_length(splitters_positions, ONU_positions):
         splitter_position = splitters_positions[int(splitter_id)]
         total_length += calculate_distance(onu_position, splitter_position)
         
-    all_nodes = splitters_positions
+    all_nodes = list(set(splitters_positions))
     dist_matrix = distance_matrix(all_nodes, all_nodes)
     mst = minimum_spanning_tree(dist_matrix).toarray()
     total_length += mst[mst > 0].sum()

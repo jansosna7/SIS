@@ -38,13 +38,15 @@ def optimize_splitters_with_reassignment(onups, splitters_positions, max_iter, m
     stagnation = 0
     for iteration in range(max_iter):
         chosen_splitter_index = random.randint(1,len(splitters_positions)-1) #dont move OLT
+        print(chosen_splitter_index)
         best_move = None
         best_length = total_length
         best_mst = mst
         best_ONU_positions = ONU_positions
         best_splitters_positions = splitters_positions
+        print(best_splitters_positions)
         
-        for distance in [1,3,9,18]:
+        for distance in [18,9,3,1]:
             for direction in ["up", "down", "left", "right", "up left", "up right", "down left", "down right"]:
                 new_position = move_splitter(splitters_positions[chosen_splitter_index], direction, distance)
                 new_splitters_positions = swap(splitters_positions, chosen_splitter_index, new_position)            
@@ -73,14 +75,14 @@ def optimize_splitters_with_reassignment(onups, splitters_positions, max_iter, m
 
 def main():
     OLT = (0,0)
-    file_path = "onu_points" + num + ".xlsx"
+    file_path = "onu_points" + "_6" + ".xlsx"
     ONU_positions =  pd.read_excel(file_path)
     ONU_positions['splitter_id'] = -1
     num_splitters = 10
     max_iter = 3000
     max_stagnation = 33
     
-    for num_splitters in range(1, 1+int(len(ONU_positions)**0.5)):
+    for num_splitters in range(1, 1+int(len(ONU_positions))):
         splitters_positions = [OLT] + random_initial_positions(num_splitters)  
         splitters,onus,dist,mst = optimize_splitters_with_reassignment(ONU_positions, splitters_positions, max_iter, max_stagnation)
     

@@ -14,10 +14,10 @@ import k_means
 from fiber_lib import *
 
 
-def optimize_splitters_with_krand(OLT, ONU_positions, num_splitters, max_iter, max_stagnation):
+def optimize_splitters_with_krand(ONU_positions, num_splitters, max_iter, max_stagnation):
     #k-means version
-    splitters_positions, ONU_positions, total_distance, mst = k_means.optimize_splitters_with_kmeans(OLT, ONU_positions, num_splitters)
-    splitters_positions = [OLT] + splitters_positions
+    splitters_positions, ONU_positions, total_distance, mst = k_means.optimize_splitters_with_kmeans(ONU_positions, num_splitters)
+    splitters_positions = splitters_positions
 
     #random noise version
     splitters_positions, ONU_positions, total_length, mst = random_noise.optimize_splitters_with_random_noise(ONU_positions, splitters_positions, max_iter, max_stagnation)
@@ -29,16 +29,15 @@ def optimize_splitters_with_krand(OLT, ONU_positions, num_splitters, max_iter, m
 
 
 def calculate(ONU_positions, max_splitters):
-    OLT = (0,0)
     file_path = "onu_points" + num + ".xlsx"
     ONU_positions['splitter_id'] = -1
     max_iter = 5000
     max_stagnation = 50
 
-    best_splitters,best_onus,best_dist,best_mst = optimize_splitters_with_krand(OLT, ONU_positions, 1, max_iter, max_stagnation)
+    best_splitters,best_onus,best_dist,best_mst = optimize_splitters_with_krand(ONU_positions, 1, max_iter, max_stagnation)
 
     for num_splitters in range(3, min(len(ONU_positions)+1,max_splitters+1)):
-        c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_krand(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
+        c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_krand(ONU_positions, num_splitters, max_iter, max_stagnation)
         print(num_splitters, c_dist)
         
         if c_dist<best_dist:

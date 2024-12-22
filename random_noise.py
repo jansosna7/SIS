@@ -12,9 +12,8 @@ import os
 
 def add_noise(splitters_positions, distance):
     new_positions = []
-    new_positions.append(splitters_positions[0])
 
-    for (x, y) in splitters_positions[1:]:
+    for (x, y) in splitters_positions:
         # Generate a random number between 0 and 1
         rand_num = random.random()
         
@@ -96,7 +95,7 @@ def main():
     max_stagnation = 60
     
     for num_splitters in range(1, 2+int(len(ONU_positions)**0.5)):
-        splitters_positions = [OLT] + random_initial_positions(num_splitters)
+        splitters_positions = random_initial_positions(num_splitters)
         splitters,onus,dist,mst = optimize_splitters_with_random_noise(ONU_positions, splitters_positions, max_iter, max_stagnation)
     
         best_dist = dist

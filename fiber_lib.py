@@ -23,7 +23,7 @@ def calculate_total_length(splitters_positions, ONU_positions):
         splitter_position = splitters_positions[int(splitter_id)]
         total_length += calculate_distance(onu_position, splitter_position)
         
-    all_nodes = list(set(splitters_positions))
+    all_nodes = splitters_positions
     dist_matrix = distance_matrix(all_nodes, all_nodes)
     mst = minimum_spanning_tree(dist_matrix).toarray()
     total_length += mst[mst > 0].sum()
@@ -52,12 +52,11 @@ def assign_ONU_to_splitters(splitters_positions, onus):
         closest_splitter_id = -1
         
         for ids, splitter in enumerate(splitters_positions):
-            if(ids > 0):
-                distance = calculate_distance(onu_position, splitter)
+            distance = calculate_distance(onu_position, splitter)
 
-                if distance < min_distance:
-                    min_distance = distance
-                    closest_splitter_id = ids
+            if distance < min_distance:
+                min_distance = distance
+                closest_splitter_id = ids
 
         ONU_positions.at[index, 'splitter_id'] = closest_splitter_id
         ONU_positions.at[index, 'distance'] = int(min_distance)
@@ -68,9 +67,9 @@ def assign_ONU_to_splitters(splitters_positions, onus):
 def plot_network(splitters_positions, mst, ONU_positions, title, dist):
     plt.figure(figsize=(10, 8))
 
-    plt.plot(splitters_positions[0][0], splitters_positions[0][1], 'bo', markersize=10, label='OLT')
+    plt.plot(0, 0, 'bo', markersize=10, label='OLT')
 
-    for idx, splitter in enumerate(splitters_positions[1:]):
+    for idx, splitter in enumerate(splitters_positions[:]):
         plt.plot(splitter[0], splitter[1], 'ro', markersize=8, label='Splitter' if idx == 0 else "")  # Splitters in red
 
     for i in range(mst.shape[0]):

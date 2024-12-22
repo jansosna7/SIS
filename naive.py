@@ -37,14 +37,14 @@ def optimize_splitters_with_reassignment(onups, splitters_positions, max_iter, m
 
     stagnation = 0
     for iteration in range(max_iter):
-        chosen_splitter_index = random.randint(1,len(splitters_positions)-1) #dont move OLT
-        print(chosen_splitter_index)
+        chosen_splitter_index = random.randint(0,len(splitters_positions)-1) 
+        #print(chosen_splitter_index)
         best_move = None
         best_length = total_length
         best_mst = mst
         best_ONU_positions = ONU_positions
         best_splitters_positions = splitters_positions
-        print(best_splitters_positions)
+        #print(best_splitters_positions)
         
         for distance in [18,9,3,1]:
             for direction in ["up", "down", "left", "right", "up left", "up right", "down left", "down right"]:
@@ -83,7 +83,7 @@ def main():
     max_stagnation = 33
     
     for num_splitters in range(1, 1+int(len(ONU_positions))):
-        splitters_positions = [OLT] + random_initial_positions(num_splitters)  
+        splitters_positions = random_initial_positions(num_splitters)  
         splitters,onus,dist,mst = optimize_splitters_with_reassignment(ONU_positions, splitters_positions, max_iter, max_stagnation)
     
         file_path = os.path.join("naive_img", str(num_splitters) + "_naive_fiber_network" + num + ".png")

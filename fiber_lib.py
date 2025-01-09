@@ -76,7 +76,7 @@ def plot_network(splitters_positions, mst, ONU_positions, title, dist):
         for j in range(mst.shape[1]):
             if mst[i, j] > 0:  # There is a connection
                     plt.plot([splitters_positions[i][0], splitters_positions[j][0]], 
-                             [splitters_positions[i][1], splitters_positions[j][1]], 'r-', linewidth=2)
+                             [splitters_positions[i][1], splitters_positions[j][1]], 'g-', linewidth=2)
 
     for _, onu in ONU_positions.iterrows():
         plt.plot(onu['x'], onu['y'], 'go', markersize=4)
@@ -98,6 +98,7 @@ def plot_network(splitters_positions, mst, ONU_positions, title, dist):
     plt.grid()
     plt.legend()
     plt.savefig(title)
-    plt.close()
+    plt.show()
+#   plt.close()
 
     

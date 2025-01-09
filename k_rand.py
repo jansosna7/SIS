@@ -30,6 +30,9 @@ def optimize_splitters_with_krand(ONU_positions, num_splitters, max_iter, max_st
 
 def calculate(ONU_positions, max_splitters):
     file_path = "onu_points" + num + ".xlsx"
+    new_point = pd.DataFrame({'x': [0], 'y': [0]})
+    ONU_positions = pd.concat([ONU_positions, new_point], ignore_index=True)
+    
     ONU_positions['splitter_id'] = -1
     max_iter = 5000
     max_stagnation = 50
@@ -62,10 +65,10 @@ def main():
     max_iter = 2000
     max_stagnation = 20
 
-    best_splitters,best_onus,best_dist,best_mst = optimize_splitters_with_krand(OLT, ONU_positions, 1, max_iter, max_stagnation)
+    best_splitters,best_onus,best_dist,best_mst = optimize_splitters_with_krand(ONU_positions, 1, max_iter, max_stagnation)
 
     for num_splitters in range(1, len(ONU_positions)+1):
-        c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_krand(OLT, ONU_positions, num_splitters, max_iter, max_stagnation)
+        c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_krand(ONU_positions, num_splitters, max_iter, max_stagnation)
         print(c_dist)
         
         if c_dist<best_dist:

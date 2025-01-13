@@ -64,10 +64,8 @@ def assign_ONU_to_splitters(splitters_positions, onus):
     
     return ONU_positions.copy()
 
-def plot_network(splitters_positions, mst, ONU_positions, title, dist):
+def plot_network(splitters_positions, mst, ONU_positions, title, dist, close=True):
     plt.figure(figsize=(10, 8))
-
-    plt.plot(0, 0, 'bo', markersize=10, label='OLT')
 
     for idx, splitter in enumerate(splitters_positions[:]):
         plt.plot(splitter[0], splitter[1], 'ro', markersize=8, label='Splitter' if idx == 0 else "")  # Splitters in red
@@ -76,7 +74,8 @@ def plot_network(splitters_positions, mst, ONU_positions, title, dist):
         for j in range(mst.shape[1]):
             if mst[i, j] > 0:  # There is a connection
                     plt.plot([splitters_positions[i][0], splitters_positions[j][0]], 
-                             [splitters_positions[i][1], splitters_positions[j][1]], 'g-', linewidth=2)
+                             [splitters_positions[i][1], splitters_positions[j][1]], 'r-', linewidth=2)
+                    
 
     for _, onu in ONU_positions.iterrows():
         plt.plot(onu['x'], onu['y'], 'go', markersize=4)
@@ -87,6 +86,7 @@ def plot_network(splitters_positions, mst, ONU_positions, title, dist):
         splitter_position = splitters_positions[splitter_id]
         plt.plot([splitter_position[0], onu['x']], [splitter_position[1], onu['y']], 'g-', linewidth=1) 
 
+    plt.plot(0, 0, 'bo', markersize=4, label='OLT')
 
     plt.title('Fiber network distance: ' + str(dist))
     plt.xlabel('X Position')
@@ -99,6 +99,7 @@ def plot_network(splitters_positions, mst, ONU_positions, title, dist):
     plt.legend()
     plt.savefig(title)
     plt.show()
-#   plt.close()
+    if(close):
+        plt.close()
 
     

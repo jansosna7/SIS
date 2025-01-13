@@ -6,7 +6,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 from k_rand import calculate
 
-df = pd.DataFrame(columns=['x', 'y'])
+#df = pd.DataFrame(columns=['x', 'y'])
+df = pd.DataFrame({'x': [0], 'y': [0]})
 
 root = tk.Tk()
 root.title("XY Plane with Points")
@@ -16,7 +17,8 @@ plane_size = 0
 canvas = None  
 
 def ask_plane_size():
-    size = simpledialog.askinteger("Plane Size", "Enter the size of the plane (positive integer):")
+    size = 25
+#    size = simpledialog.askinteger("Plane Size", "Enter the size of the plane (positive integer):")
     if size is None or size <= 0:
         messagebox.showerror("Invalid Size", "Please enter a valid positive integer.")
         ask_plane_size()
@@ -88,7 +90,7 @@ def call_calculate():
     if max_splitters is None or max_splitters <= 0:
         messagebox.showerror("Invalid Input", "Please enter a valid positive integer for max_splitters.")
     else:
-        calculate(df, max_splitters)
+        calculate(df, max_splitters, close=False)
 
 frame_controls = tk.Frame(root)
 frame_controls.pack(side=tk.LEFT, padx=10, pady=10)

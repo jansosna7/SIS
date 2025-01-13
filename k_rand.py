@@ -28,10 +28,8 @@ def optimize_splitters_with_krand(ONU_positions, num_splitters, max_iter, max_st
     return splitters_positions, ONU_positions, total_length, mst
 
 
-def calculate(ONU_positions, max_splitters):
+def calculate(ONU_positions, max_splitters, close=True):
     file_path = "onu_points" + num + ".xlsx"
-    new_point = pd.DataFrame({'x': [0], 'y': [0]})
-    ONU_positions = pd.concat([ONU_positions, new_point], ignore_index=True)
     
     ONU_positions['splitter_id'] = -1
     max_iter = 5000
@@ -50,7 +48,7 @@ def calculate(ONU_positions, max_splitters):
             best_mst = c_mst
         
     file_path = os.path.join("k-rand_img" + "_krand_fiber_network" + ".png")
-    plot_network(best_splitters, best_mst, best_onus, file_path, best_dist)
+    plot_network(best_splitters, best_mst, best_onus, file_path, best_dist, close)
     print("final", best_dist)
     print(best_splitters)
     print(best_onus)

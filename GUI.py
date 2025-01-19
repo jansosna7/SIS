@@ -17,8 +17,8 @@ plane_size = 0
 canvas = None  
 
 def ask_plane_size():
-    size = 25
-#    size = simpledialog.askinteger("Plane Size", "Enter the size of the plane (positive integer):")
+#    size = 25
+    size = simpledialog.askinteger("Plane Size", "Enter the size of the plane (positive integer):")
     if size is None or size <= 0:
         messagebox.showerror("Invalid Size", "Please enter a valid positive integer.")
         ask_plane_size()
@@ -90,7 +90,7 @@ def call_calculate():
     if max_splitters is None or max_splitters <= 0:
         messagebox.showerror("Invalid Input", "Please enter a valid positive integer for max_splitters.")
     else:
-        calculate(df, max_splitters, close=False)
+        calculate(df, max_splitters, close=False, size=plane_size)
 
 frame_controls = tk.Frame(root)
 frame_controls.pack(side=tk.LEFT, padx=10, pady=10)

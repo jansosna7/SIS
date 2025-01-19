@@ -8,7 +8,6 @@ from scipy.spatial import distance_matrix
 import matplotlib.pyplot as plt
 import os
 
-FIG_SIZE = 25
 num = "_5"
 
 def calculate_distance(point1, point2):
@@ -64,7 +63,7 @@ def assign_ONU_to_splitters(splitters_positions, onus):
     
     return ONU_positions.copy()
 
-def plot_network(splitters_positions, mst, ONU_positions, title, dist, close=True):
+def plot_network(splitters_positions, mst, ONU_positions, title, dist, close=True, size=25):
     plt.figure(figsize=(10, 8))
 
     for idx, splitter in enumerate(splitters_positions[:]):
@@ -91,8 +90,8 @@ def plot_network(splitters_positions, mst, ONU_positions, title, dist, close=Tru
     plt.title('Fiber network distance: ' + str(dist))
     plt.xlabel('X Position')
     plt.ylabel('Y Position')
-    plt.xlim(-FIG_SIZE, FIG_SIZE)
-    plt.ylim(-FIG_SIZE, FIG_SIZE)
+    plt.xlim(-size, size)
+    plt.ylim(-size, size)
     plt.axhline(0, color='gray', lw=0.5)
     plt.axvline(0, color='gray', lw=0.5)
     plt.grid()

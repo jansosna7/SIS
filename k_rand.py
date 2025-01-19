@@ -28,7 +28,7 @@ def optimize_splitters_with_krand(ONU_positions, num_splitters, max_iter, max_st
     return splitters_positions, ONU_positions, total_length, mst
 
 
-def calculate(ONU_positions, max_splitters, close=True):
+def calculate(ONU_positions, max_splitters, close=True, size=25):
     file_path = "onu_points" + num + ".xlsx"
     
     ONU_positions['splitter_id'] = -1
@@ -47,38 +47,9 @@ def calculate(ONU_positions, max_splitters, close=True):
             best_dist = c_dist
             best_mst = c_mst
         
-    file_path = os.path.join("k-rand_img" + "_krand_fiber_network" + ".png")
-    plot_network(best_splitters, best_mst, best_onus, file_path, best_dist, close)
+    file_path = os.path.join("krand_fiber_network" + ".png")
+    plot_network(best_splitters, best_mst, best_onus, file_path, best_dist, close, size)
     print("final", best_dist)
     print(best_splitters)
     print(best_onus)
 
-
-
-def main():
-    OLT = (0,0)
-    file_path = "onu_points" + num + ".xlsx"
-    ONU_positions =  pd.read_excel(file_path)
-    ONU_positions['splitter_id'] = -1
-    max_iter = 2000
-    max_stagnation = 20
-
-    best_splitters,best_onus,best_dist,best_mst = optimize_splitters_with_krand(ONU_positions, 1, max_iter, max_stagnation)
-
-    for num_splitters in range(1, len(ONU_positions)+1):
-        c_splitters,c_onus,c_dist,c_mst = optimize_splitters_with_krand(ONU_positions, num_splitters, max_iter, max_stagnation)
-        print(c_dist)
-        
-        if c_dist<best_dist:
-            best_splitters = c_splitters
-            best_onus = c_onus
-            best_dist = c_dist
-            best_mst = c_mst
-        
-    file_path = os.path.join("k-rand_img" + "_krand_fiber_network" + ".png")
-    plot_network(best_splitters, best_mst, best_onus, file_path, int(best_dist))
-    print(best_dist)
-
-
-if __name__=="__main__":
-    main()
